@@ -1,0 +1,1 @@
+This is my attempt at the devops project. I will be updating this repository as I have more findings to come. Other thoughts and remarks can be found in the documentation folder.
