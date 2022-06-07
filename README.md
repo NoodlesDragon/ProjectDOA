@@ -102,6 +102,9 @@ NGINX was installed locally and redirected to port 4000
 ## Deployment to Kubernetes/Minikube
 From the completed Docker compose yaml, I used the Kompose conversion tool to convert to a Kubernetes manifest file. Initially, it did not work as the file paths had to be manually corrected. I managed, preliminarily, on Windows Docker Desktop’s Kubernetes integration as well as Kubernetes UI build with kubectl.
 
+![kubectl](https://user-images.githubusercontent.com/17082681/172453412-208ba22e-8fb5-4ceb-a2f1-80b69dfd214b.PNG)
+
+
 ## Deployment to Amazon EC2/EBS
 TBD
 
