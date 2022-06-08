@@ -100,9 +100,42 @@ NGINX was installed locally and redirected to port 4000
 
 
 ## Deployment to Kubernetes/Minikube
-From the completed Docker compose yaml, I used the Kompose conversion tool to convert to a Kubernetes manifest file. Initially, it did not work as the file paths had to be manually corrected. I managed, preliminarily, on Windows Docker Desktop’s Kubernetes integration as well as Kubernetes UI build with kubectl.
+### Tools required
+- Kubectl: Kubernetes command line tool
+- Minikube: Lightweight local Kubernetes service
+- Kubernetes Dashboard (also included in Minikube install)
+- Kompose: Kubernetes conversion tool that converts Docker Compose yamls to K8s Manifests
 
-![kubectl](https://user-images.githubusercontent.com/17082681/172453412-208ba22e-8fb5-4ceb-a2f1-80b69dfd214b.PNG)
+I installed them using Chocolatey since i'm on Windows.  
+To test minikube functionality, we can trial Minikube itself.
+```
+minikube start
+```
+![minikubestart](https://user-images.githubusercontent.com/17082681/172625791-7cae1d64-0234-4264-a1a7-902d093fc4c6.PNG)
+
+```
+minikube status
+```
+![minikubestatus](https://user-images.githubusercontent.com/17082681/172626015-bf9789e1-128c-4fdd-b293-a12c3ae4f115.PNG)   
+This shows us that Minikube is running properly.
+Minikube also has its own dashboard for monitoring deployment. A separate version can be installed as Kubernetes UI, but we can use it from here
+```
+minikube dashboard
+```
+![dashboard](https://user-images.githubusercontent.com/17082681/172626637-03662afd-c847-480a-a5bc-e94fa4b2fcc9.PNG)
+![dashboard2](https://user-images.githubusercontent.com/17082681/172626660-820f3d3f-cade-4feb-9734-f1a7171d4787.PNG)
+
+### Kompose Configuration
+Kompose is a converstion tool that handily converts Docker Compose yamls to K8s manifest files, which are required for deployment. To convert a file to manifest, in directory, I used...
+```
+kompose convert -f docker-compose.yaml -o manifests.yaml
+```
+...to punch it all neatly into a single manifest.yaml output. I can now apply...
+```
+kubectl apply -f manifests.yml
+```
+...to deploy the manifest.   
+![configure](https://user-images.githubusercontent.com/17082681/172627132-fba0372e-27b1-4a2a-8d20-6faa1703ffb6.PNG)
 
 
 ## Deployment to Amazon EC2/EBS
