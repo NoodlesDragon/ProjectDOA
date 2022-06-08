@@ -2,7 +2,7 @@
 ## Preface
 I am Wilson Chan and this is the writeup of the DevOps deployment project, which I have attempted to the best of my ability. For this project, I am using Windows 10 Home edition with the assistance of Docker Desktop and Visual Studio Code IDE.
 ## Introduction
-Virtualisation as a concept is hardly a new idea, ranging back to the 1980s. With the emergence of early OS-level virtualisation such that of FreeBSD jails to the modern Kubernetes, virtualisation has evolved to be a developer-friendly tool highly beneficial to the world of development operations. Especially in the case of the technology stack in question, Docker, containerisation transforms the traditional way of software packaging, delivery and deployment into a streamlined ecosystem. In a software container, applications (along with dependency libraries) are packaged into container images to be executed on a target machine. This brings about multiple benefits, such as deployment consistency, service reusability (by promoting microservices design) and cost-effectiveness. Automation is also an option for container deployment if a user chooses to use container orchestration mediums.  
+With the emergence of early OS-level virtualisation such that of FreeBSD jails to the modern Kubernetes, virtualisation has evolved to be a developer-friendly tool highly beneficial to the world of development operations. Especially in the case of the technology stack in question, Docker, containerisation transforms the traditional way of software packaging, delivery and deployment into a streamlined ecosystem. In a software container, applications (along with dependency libraries) are packaged into container images to be executed on a target machine. This brings about multiple benefits, such as deployment consistency, service reusability (by promoting microservices design) and cost-effectiveness. Automation is also an option for container deployment if a user chooses to use container orchestration mediums.  
 This project is a Python based React Web application that, as per namesake, contains a Python-based backend API as well as a React-based frontend. When both are running, it displays a web application that shows RAM and CPU usage on two statistics on the local system. As part of this program, I will attempt to run the application from a containerised setting using Docker technology. 
 
 ![React](https://user-images.githubusercontent.com/17082681/172428183-6e2b7d60-7f29-4d0e-9d8c-330333aff173.PNG)
@@ -125,6 +125,12 @@ minikube dashboard
 ![dashboard](https://user-images.githubusercontent.com/17082681/172626637-03662afd-c847-480a-a5bc-e94fa4b2fcc9.PNG)
 ![dashboard2](https://user-images.githubusercontent.com/17082681/172626660-820f3d3f-cade-4feb-9734-f1a7171d4787.PNG)
 
+To accurately set the context environment Minikube will run (and instead of the default Docker runtime), we have to point it in the right direction.
+```
+minikube docker-env
+minikube -p minikube docker-env --shell powershell | Invoke-Expression               #WINDOWS ONLY
+```
+
 ### Kompose Configuration
 Kompose is a converstion tool that handily converts Docker Compose yamls to K8s manifest files, which are required for deployment. To convert a file to manifest, in directory, I used...
 ```
@@ -135,8 +141,12 @@ kompose convert -f docker-compose.yaml -o manifests.yaml
 kubectl apply -f manifests.yml
 ```
 ...to deploy the manifest.   
-![configure](https://user-images.githubusercontent.com/17082681/172627132-fba0372e-27b1-4a2a-8d20-6faa1703ffb6.PNG)
+![configure](https://user-images.githubusercontent.com/17082681/172627132-fba0372e-27b1-4a2a-8d20-6faa1703ffb6.PNG)  
 
+After deployment is complete, show available instances.
+```
+kubectl get po -A
+```
 
 ## Deployment to Amazon EC2/EBS
 TBD
