@@ -73,6 +73,8 @@ items:
               volumeMounts:
                 - mountPath: /app
                   name: api-claim0
+              imagePullPolicy: Never
+              command: ["/bin/sh", "-ec", "sleep 1000"]
           restartPolicy: Always
           volumes:
             - name: api-claim0
@@ -126,6 +128,7 @@ items:
               resources: {}
               stdin: true
               tty: true
+              imagePullPolicy: Never
           restartPolicy: Always
     status: {}
 kind: List
