@@ -96,8 +96,7 @@ docker-compose up
 Again, Docker Desktop helps a ton with the management of local images.
 ![DockerDOA](https://user-images.githubusercontent.com/17082681/172444504-34040de9-b7d8-41f6-90a8-8cbb58a4a77e.PNG)
 
-NGINX was installed locally and redirected to port 4000
-
+I can now access this on my localhost:3000 page.
 
 ## Deployment to Kubernetes/Minikube
 ### Tools required
@@ -203,6 +202,6 @@ kubectl expose deployment api --type="LoadBalancer"
 
 
 ## Deployment to Amazon EC2/EBS
-TBD
+TBD - NGINX Image?
 
 
