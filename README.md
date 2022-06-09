@@ -107,6 +107,25 @@ NGINX was installed locally and redirected to port 4000
 - Kompose: Kubernetes conversion tool that converts Docker Compose yamls to K8s Manifests
 
 I installed them using Chocolatey since i'm on Windows.  
+
+### Kompose Configuration
+Kompose is a conversion tool that handily converts Docker Compose yamls to K8s manifest files, which are required for deployment. To convert a file to manifest, in directory, I used...
+```
+kompose convert -f docker-compose.yaml -o manifests.yaml
+```
+...to punch it all neatly into a single manifest.yaml output. I can now apply...
+```
+kubectl apply -f manifests.yml
+```
+...to deploy the manifest.   
+![configure](https://user-images.githubusercontent.com/17082681/172627132-fba0372e-27b1-4a2a-8d20-6faa1703ffb6.PNG)  
+
+After deployment is complete, show available instances.
+```
+kubectl get po -A
+```
+
+### Minikube
 To test minikube functionality, we can trial Minikube itself.
 ```
 minikube start
@@ -129,25 +148,25 @@ To accurately set the context environment Minikube will run (and instead of the 
 ```
 minikube docker-env
 minikube -p minikube docker-env --shell powershell | Invoke-Expression               #WINDOWS ONLY
+```  
+Now, with this command, the current shell is configured for use with the Minikube environment (daemon).   
+I have run into an issue where Minikube will attempt to use other Docker instances, so to point it to the correct environment is important.
+In the same shell, we will build the images and run them.
 ```
+docker build -t sys-stats .
+docker image ls
+```
+![imagelsdock](https://user-images.githubusercontent.com/17082681/172763451-9f55073b-5786-4f09-9352-4b16624cc651.PNG)
+```
+kubectl run sysstats2 --image=sys-stats --image-pull-policy=Never    
+```   
+It is imperative that the image pull policy tag be set as Minikube will attempt to query and pull from Docker Hub, the Docker default registry, instead of looking around for a local image, which is what it is. This can also be set in the Docker Compose manifest with the same tag under containers. Without it, it will be stuck with the error 'ErrorImgPull' where it fails to pull an image.    
+What's left is to run startup for all instances or for Kompose and we should be good to go.  
+![bothrun](https://user-images.githubusercontent.com/17082681/172763859-229b4d25-fbd9-40d8-8298-a1b271971780.PNG)  
+Container status can also be found in the minikube dashboard too, which is pretty neat.
+![pods](https://user-images.githubusercontent.com/17082681/172763981-6d763f76-30d8-421c-b180-4b3bfee229e2.PNG)
 
-### Kompose Configuration
-Kompose is a converstion tool that handily converts Docker Compose yamls to K8s manifest files, which are required for deployment. To convert a file to manifest, in directory, I used...
-```
-kompose convert -f docker-compose.yaml -o manifests.yaml
-```
-...to punch it all neatly into a single manifest.yaml output. I can now apply...
-```
-kubectl apply -f manifests.yml
-```
-...to deploy the manifest.   
-![configure](https://user-images.githubusercontent.com/17082681/172627132-fba0372e-27b1-4a2a-8d20-6faa1703ffb6.PNG)  
-
-After deployment is complete, show available instances.
-```
-kubectl get po -A
-```
-
+Finally, we will expose the service and set it for load balancing.
 ## Deployment to Amazon EC2/EBS
 TBD
 
