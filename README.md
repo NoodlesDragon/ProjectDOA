@@ -125,7 +125,7 @@ After deployment is complete, show available instances.
 kubectl get po -A
 ```
 
-### Minikube
+### Minikube Testing
 To test minikube functionality, we can trial Minikube itself.
 ```
 minikube start
@@ -166,7 +166,42 @@ What's left is to run startup for all instances or for Kompose and we should be 
 Container status can also be found in the minikube dashboard too, which is pretty neat.
 ![pods](https://user-images.githubusercontent.com/17082681/172763981-6d763f76-30d8-421c-b180-4b3bfee229e2.PNG)
 
-Finally, we will expose the service and set it for load balancing.
+### Deployment with Kompose
+Now I want to deploy the whole application with its containers, which i will use the Kompose manifest created previously.
+```
+kubectl apply -f ./manifests.yaml
+```   
+This would apply the Kompose configuration that I have setup.  
+Bug note: I had to add a sleep command to my api section of the Kompose YAML as somehow the api container would always get stuck in a restart loop and fail (CrashLoopBackOff). A way I found to resolve it is to artificially add a command that forces it to stay up. 
+```
+spec:
+          containers:
+            - image: api
+              name: api-c
+              ports:
+                - containerPort: 4000
+              resources: {}
+              volumeMounts:
+                - mountPath: /app
+                  name: api-claim0
+              imagePullPolicy: Never
+              command: ["/bin/sh", "-ec", "sleep 1000"]      #Sleep cmd
+```
+Running 
+```kubectl get deployment``` and checking on dashboard confirms the success.
+
+![DeploymentMap](https://user-images.githubusercontent.com/17082681/172779964-f5320856-1220-4619-a666-d7d3565c04c6.PNG)
+![Kubectl Deploy](https://user-images.githubusercontent.com/17082681/172780143-dfce2486-0ba1-4812-a249-df5646257aca.PNG)
+
+We can now proceed to expose this deployment with a load balancer, as specified in the deployment manifest.
+```
+kubectl expose deployment api --type="LoadBalancer"
+```
+
+
+
+
+
 ## Deployment to Amazon EC2/EBS
 TBD
 
